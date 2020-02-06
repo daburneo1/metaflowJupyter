@@ -58,3 +58,12 @@
   - title: Actualizacion
     url: 02/02/act
     not_numbered: true
+
+- tittle: Ejemplos
+  url: /03/introex
+  not_numbered: true
+  expand_sections: true
+  sections:
+  - title: Ejemplo1
+    url: 03/01/ex1
+    not_numbered: true
