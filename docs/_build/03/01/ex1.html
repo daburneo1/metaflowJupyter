@@ -1,0 +1,505 @@
+---
+interact_link: content/03/01/ex1.ipynb
+kernel_name: python3
+kernel_path: content/03/01
+has_widgets: false
+title: |-
+  Ejemplo1
+pagenum: 6
+prev_page:
+  url: /03/introex.html
+next_page:
+  url: 
+suffix: .ipynb
+search: de el se en la y para b del step un peliculas una los que genero ejemplo metaflow ejecucion lista pasos por al este csv paralelo archivo esto puede ser final bjoin las mediante parametros ramas reproduccion su utilizar desde directorio manera permite cualquier similar todos self variable esta python informacion paralelos es selecciona resultado siguiente paso proporcionado visualiza funcionamiento carga includefile basicos trabajo unir resultados cargara metadatos crear favorito procede importar modulos bmetaflow implementa funcion os path join conveniente obtener ruta mas facil tutorial bparametros definir datos incluirlo como entrada versiona lo hara accesible directamente traves objeto definen asignandolos
+
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
+---
+
+    <main class="jupyter-page">
+    <div id="page-info"><div id="page-title">Ejemplo1</div>
+</div>
+    <div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Ejemplo-1">Ejemplo 1<a class="anchor-link" href="#Ejemplo-1"> </a></h1><p>En este ejemplo se visualiza el funcionamiento de Metaflow, mediante
+la carga de un CSV mediante IncludeFile, Parametros basicos de Metaflow y la ejecucion de ramas de trabajo en paralelo y unir resultados</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Lista-de-reproduccion">Lista de reproduccion<a class="anchor-link" href="#Lista-de-reproduccion"> </a></h2><p>En este ejemplo se cargara un archivo CSV de metadatos de peliculas
+y crear una lista de reproduccion para su genero de peliculas favorito</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Ejecucion">Ejecucion<a class="anchor-link" href="#Ejecucion"> </a></h3>
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">metaflow</span> <span class="kn">import</span> <span class="n">FlowSpec</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">IncludeFile</span><span class="p">,</span> <span class="n">Parameter</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Se procede a importar los modulos a utilizar desde <b>Metaflow</b></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">script_path</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+
+    <span class="n">current_folder</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;_dh&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_folder</span><span class="p">,</span><span class="s1">&#39;movies.csv&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Se implementa la funcion <code>os.path.join</code>, conveniente para obtener la ruta del directorio de una manera mas facil. Esto permite utilizar el tutorial desde cualquier directorio</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">PlayListFlow</span><span class="p">(</span><span class="n">FlowSpec</span><span class="p">):</span>
+
+    <span class="n">movie_data</span> <span class="o">=</span> <span class="n">IncludeFile</span><span class="p">(</span><span class="s2">&quot;movie_data&quot;</span><span class="p">,</span>
+                             <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The path to a movie metadata file.&quot;</span><span class="p">,</span>
+                             <span class="n">default</span><span class="o">=</span><span class="n">script_path</span><span class="p">(</span><span class="s1">&#39;movies.csv&#39;</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>De manera similar a los <b>Parametros</b>, se puede definir un archivo de datos para incluirlo como entrada. Metaflow versiona el archivo y lo hara accesible a todos los pasos directamente a traves del objeto <code>self</code></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="n">genre</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;genre&#39;</span><span class="p">,</span> <span class="c1">#Nombre del parametro</span>
+                      <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Filter movies for a particular genre.&quot;</span><span class="p">,</span> <span class="c1">#Descripcion</span>
+                      <span class="n">default</span><span class="o">=</span><span class="s1">&#39;action&#39;</span><span class="p">)</span> <span class="c1">#Valor por defecto</span>
+
+    <span class="n">recommendations</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;recommendations&#39;</span><span class="p">,</span>
+                                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The number of movies to recommend in &quot;</span>
+                                <span class="s2">&quot;the playlist.&quot;</span><span class="p">,</span>
+                                <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="c1">#El numero de peliculas que se mostraran al final</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Los parametros se definen asignandolos a una variable global. En estos se detalla el nombre del parametro, una descripcion bajo la sintaxis <code>help="..."</code>, ademas del valor por defecto, el cual puede ser el tipo de variable(int, String) o un dato en especifico(action).</p>
+<p>Cada "step" esta antecedido por el decorador de Python <code>@</code></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="nd">@step</span>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="c1"># Para este ejemplo solo se necesita de los titulos y el genero.</span>
+        <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;movie_title&#39;</span><span class="p">,</span> <span class="s1">&#39;genres&#39;</span><span class="p">]</span> <span class="c1">#Se crea la lista</span>
+
+        <span class="c1"># Crear un diccionario de las listas</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">column</span><span class="p">,</span> <span class="nb">list</span><span class="p">())</span> \
+                              <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">)</span>
+
+
+
+        <span class="c1"># Analizar el CSV</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">movie_data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span> <span class="c1">#Condicion para crear lineas separadas por cada salto de linea del CSV</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span> <span class="c1">#Separar por cada coma. informacion de los titulos</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">column</span><span class="p">:</span> <span class="n">header</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">column</span><span class="p">)</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">}</span> 
+
+        <span class="c1"># Llenar el dataframe con cada linea seleccionada anteriormente.</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span> <span class="c1">#No tomar en cuenta la primera fila</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span> <span class="c1">#Si es que esta vacio</span>
+                <span class="k">continue</span>
+
+            <span class="n">fields</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>       
+            <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="n">column</span><span class="p">]])</span> 
+
+        <span class="c1"># Ejecutar en paralelo los metodos bonus_movie y genre_movies</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonus_movie</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">genre_movies</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>En step <b>start</b> se comienza por analizar el CSV y a este extraer la informacion necesaria y almacenarla en un diccionario de Python.</p>
+<p>En el metodo <code>self.next</code> se ejecutan pasos paralelos a travez de ramas. El beneficio de esto es mejorar el rendimiento de ejecucion. Metaflow puede ejecutar su codigo en paralelo aprovechando los distintos nucleos que posee el procesador del computador. Se permite cualquier cantidad de pasos paralelos.</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="nd">@step</span>
+    <span class="k">def</span> <span class="nf">bonus_movie</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">choice</span> <span class="c1">#Funcion del modulo aleatorio de Python</span>
+
+        <span class="c1"># Seleccionar todas las peliculas que no pertenecen al genero proporcionado anteriormente (action)</span>
+        <span class="n">movies</span> <span class="o">=</span> <span class="p">[(</span><span class="n">movie</span><span class="p">,</span> <span class="n">genres</span><span class="p">)</span> \
+                  <span class="k">for</span> <span class="n">movie</span><span class="p">,</span> <span class="n">genres</span> \
+                  <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;movie_title&#39;</span><span class="p">],</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;genres&#39;</span><span class="p">])</span> \
+                  <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">genre</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">genres</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+
+        <span class="c1"># Escoger una aleatoriamente.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bonus</span> <span class="o">=</span> <span class="n">choice</span><span class="p">(</span><span class="n">movies</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">join</span><span class="p">)</span><span class="c1">#Apunta al siguiente paso</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>El step <b>bonus_movie</b> selecciona aleatoriamente una pelicula que sea de un genero diferente para añadirla al resultado final.</p>
+<p>Luego de esto apunta al siguiente paso que es el step <b>join</b></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="nd">@step</span>
+    <span class="k">def</span> <span class="nf">genre_movies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">shuffle</span>
+
+        <span class="c1"># Seleccionar todas las peliculas que pertenezcan al genero proporcionado</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">movies</span> <span class="o">=</span> <span class="p">[</span><span class="n">movie</span> \
+                       <span class="k">for</span> <span class="n">movie</span><span class="p">,</span> <span class="n">genres</span> \
+                       <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;movie_title&#39;</span><span class="p">],</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;genres&#39;</span><span class="p">])</span> \
+                       <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">genre</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">genres</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> 
+
+        <span class="c1"># Aleatorizar las peliculas de la lista.</span>
+        <span class="n">shuffle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">movies</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">join</span><span class="p">)</span> <span class="c1">#Apunta al siguiente paso</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>El step <b>genre_movies</b> selecciona las peliculas del dataframe que coincidan con el genero proporcionado.</p>
+<p>Al final aleatoriza las peliculas de la lista para que de esta forma se encuentren listas, al igual que bonus para ser llamadas por el step <b>join</b></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="nd">@step</span>
+    <span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+
+        <span class="c1"># Reasignar las listas de peliculas a sus respectivas variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">playlist</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">genre_movies</span><span class="o">.</span><span class="n">movies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bonus</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">bonus_movie</span><span class="o">.</span><span class="n">bonus</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">)</span><span class="c1">#Apunta al paso final</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>En el step <b>join</b> se une la informacion obtenida en paralelo y se la reasigna a las variables correspondientes para ser invocadas en el paso final</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="nd">@step</span>
+    <span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Playlist for movies in genre &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">genre</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">pick</span><span class="p">,</span> <span class="n">movie</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">playlist</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pick </span><span class="si">%d</span><span class="s2">: &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">pick</span><span class="p">,</span> <span class="n">movie</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">pick</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recommendations</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bonus Pick: &#39;</span><span class="si">%s</span><span class="s2">&#39; from &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonus</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonus</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Imprimir la lista de peliculas segun el numero requerido y el genero proporcionado. En el presente ejemplo se requieren 5 peliculas del genero accion</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>if __name__ == '__main__'</code>:<br>
+    <code>PlayListFlow()</code></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Sentencia para empezar la ejecucion del programa</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Si-todos-los-pasos-se-ejecutaron-correctamente,-tendriamos-una-salida-similar-a-la-siguiente:">Si todos los pasos se ejecutaron correctamente, tendriamos una salida similar a la siguiente:<a class="anchor-link" href="#Si-todos-los-pasos-se-ejecutaron-correctamente,-tendriamos-una-salida-similar-a-la-siguiente:"> </a></h3>
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="resultado1.png"></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+
+<span class="c1"># function that takes in a dataframe and creates a text link to  </span>
+<span class="c1"># download it (will only work for files &lt; 2MB or so)</span>
+<span class="k">def</span> <span class="nf">create_download_link</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Descargar archivo CSV&quot;</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;movies.csv&quot;</span><span class="p">):</span>  
+    <span class="n">csv</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">()</span>
+    <span class="n">b64</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">csv</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">b64</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="s1">&#39;&lt;a download=&quot;</span><span class="si">{filename}</span><span class="s1">&quot; href=&quot;data:text/csv;base64,</span><span class="si">{payload}</span><span class="s1">&quot; target=&quot;_blank&quot;&gt;</span><span class="si">{title}</span><span class="s1">&lt;/a&gt;&#39;</span>
+    <span class="n">html</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">payload</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span><span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">HTML</span><span class="p">(</span><span class="n">html</span><span class="p">)</span>
+
+<span class="c1"># create a random sample dataframe</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="s1">&#39;ABCD&#39;</span><span class="p">))</span>
+
+<span class="c1"># create a link to download the dataframe</span>
+<span class="n">create_download_link</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="jb_output_wrapper }}">
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<a download="movies.csv" href="data:text/csv;base64,LEEsQixDLEQKMCwwLjY0NzU1NzIyMDIyMTI5NTYsLTAuODYxNzg0MDE2NjU5Njk4LC0yLjUzNTk0MzUwMzY4ODQwMzUsMC4zMjM1MzA5NDU5OTc3NzY4CjEsMC45MzgyMjU0Mjc2MjY0ODM0LDAuOTQ3NzkzOTA0MDA5NDIwMywtMC4yNjU2NjI4OTk5MDAzNDQ3LC0wLjA0MjU1Mjk2NDIxMjkxNjQ1CjIsMC42MjA5Njk2Nzc1Mzk1ODMxLDAuNTU5OTM0NDU4OTgwNzc5MiwtMC40OTk5NTM5MjIwNjMxMDIxLC0yLjYzMjg0MjE5NTkyODkxODUKMywxLjAyMTY0MTMzMTUzMzU1NSwwLjI0NjA5MjIzMTI2MDkzODE1LC0wLjA3Nzc3MDA5ODUwMjg2NDg2LC0wLjk1MzgwNzYxOTQ2MTkxNzcKNCwwLjgzOTc0NzU3NDY2NzcwNDMsLTEuMjg3MTM1MDYxODQyNzI0OSwwLjg4NzU2MjY5MjY5MTc1NjQsLTAuMTYwMzUyNDY3Nzk2NjE3OTYKNSwtMC40NDQ4NTg0MzcxMTY5OTgzNSwtMS4yMDI5MTk3MTI4NDIwMjI2LC0xLjYzNDczNDEyMTQzMjQyOTQsMC45MTQyNTU5MTk5NDk2NTc5CjYsMC43NjQyNDczMjU2OTE1MDA4LC0wLjAyNjM1ODExNTQxNDcyNTIxNCwwLjY5MTQxODUzOTgzNzU3NjEsMC4zMjU2OTM5NTYyNDMyMjcxNwo3LDEuOTcwMjcwNjE5OTc5MTA3LDAuMTE1NDY4MTQ1NTA5MDcxMjQsLTAuMjAzMDA5MDgyNDczMzkwMzYsLTAuOTkyMzEyMzA3NjU0NDI5CjgsMC4zMjk0NjI0NzEwMDA3MTA4NSwwLjI2ODI2MzYxODYwNTg0OTc0LDAuNzM0NDM0NzE4MDc2NjMzMSwtMC4zNzk5ODc0MzMxMjU4NDMxCjksMC4wMjI0NDEzMzU1NDQ5NzQyNjMsMS4wNTY0MzkzMzAzNTM2OTEyLC0wLjUzMTk2MTkxMDYyOTA3MTcsLTEuOTg0MDk0NDMyMzE5ODU1NwoxMCwtMC4yOTA1MDk3NjExMTE3ODAzNCwwLjI4ODc1NzYwNTc3NzM1NDQzLDAuNzE2Njc3MzE0Mzk5MTc4MSwwLjI1OTI2MTg5MzAzNzA3ODUKMTEsLTAuMjE3NzA2OTQ1ODYyMzc3NSwyLjI4NTM0MTk4NDg2MTgxNzcsLTAuNTkzMjA5OTgzNDEzMjgyLC0wLjc3MTk4MjQ0MzUzNjIxNTcKMTIsMC4zOTc0NTc4OTY0MDY2NzU3LDIuMjU3OTg0MzQ3NDYxNzk0NCwwLjI3MDQ5NzM2MDk0OTUwMTMsMC42OTM5NzM5NDMwOTc2ODA1CjEzLC0wLjA5MTQ2NjgzODYwNTc3ODYzLDAuNTU3MjEwMjgxOTQxNDM1MywxLjg1NTk1NDUyMTc0MjkyMSwtMS4yNDA3OTQ3Mzc2NDQzMjg3CjE0LC0wLjMxMTU3OTc1ODQxNDY4MDYsMC40OTUzNTYxMTMwMjAzMTM2LC0wLjg5MjI3ODQ5OTIyNzA5OTMsLTAuMTU2MzkzMzkyMTg1OTgyMwoxNSwyLjE0NTAwNTcwOTIzOTc2NjcsMS4zOTU4MjY3MDI0MzgyOTYsLTAuMzQzODY2NjY1MzgxOTUxNzYsLTAuNTcxODAyNjQ0ODYyMjMxOAoxNiwtMC43ODIzMzUyMTIzMjc0NTM3LDAuMzQ3Nzc0NjMzMjUwNjg3NiwtMC4xMDUwODMxODQyOTc0MDI4LDAuOTQyODcwNzI4NTMzMjAyOAoxNywwLjM1NDY0NTA3ODkwMDM5OTYsLTEuMzY5NzgyMjE1MjQ3ODEzNiwtMC44NDI1MDMyMjE5MjI5NDQsLTAuMzU2NzQ5NjI1Njc0NDI3ODYKMTgsMC43NjA2ODI1MTkwNzQxODQsMS4zNDc2MjU0OTgwMTM5NjA0LC0wLjI0MTAzOTIyMjE5NjY3MzUsMC4wNjg5MzI5MTkwOTE2ODYyOQoxOSwtMC4xMjUyMTUzODc0NjAwNjMsLTIuMTA3MTY4Mjc2MzAwNTM3MywtMC4xNDA5MDE1MTM2MTM4OTE0MiwtMC4wMzUzNTAxNDM3NjU5ODM5ODUKMjAsLTAuMzI1MjMyMDE2MzMwMDg0OCwxLjM2MjEwMDI3NTc3MTUwMDYsMC43NzQ5MTIwOTA2OTE4NDUzLC0wLjAzMjk3NDMwMDg1MTgxODMzCjIxLDAuNTcyMjA3NzAzODQ3MDM1MiwtMC43MTE1NDY5NjcwOTkxOTQxLDEuMDkxNjQ1NjI1Mzc2NjUxLC0wLjEyNDAyOTQ2NjkxNjI4MTM5CjIyLDAuMTMwNDg1ODY1NTk1MDU1OSwtMS4yNDMyMjMyMTUyNTg1MDQ4LDEuMzA3MTA0ODk0NzQ5NDUzNywtMC4wNTYxMzQxMjQ2MjQ5OTMxMzQKMjMsMC45ODE2NTEzMDUxNzQ4OTYzLC0wLjU3MjE4MzExMjgyMzY0MjksLTAuNDkxNzk4NDgwNDQxOTExMywwLjI3OTY5MTk4MzIxOTA4NzkKMjQsMC4zMjc5MTQ3NTg5NzE4NDA5LC0wLjIwODA3NzE4OTI3MDM0NTQ0LDEuMDM0NDM1ODI1NTk2MzQ5NSwwLjY3NjI0Mjc5NDI1ODI3NjQKMjUsMC44NTEyNjk2Mjk2NDU4NDM1LDAuMTQzMDcxNDYzNjIxNzUyNzEsMC4wMDM0NTY0OTAwOTY4Mzg0ODg2LDAuOTk1MzAxNDY1MjQ2MjAzNgoyNiwwLjAxNjgzNzIyNDkyNTY0NTUyNywtMi4xMjk0Mjk1MDg1Mzg3NTYsMS4yMDMxNDU3NzY3MTI3NTkxLC0wLjA0ODEwMjM4NDg0OTE0MTg0NQoyNywtMC4yOTM5MzA3NTYzMzg5NzQwMywwLjU2MDQ2NDk5MjQ4NDg0NTQsLTAuNDcxNDE2MTU1MDYxMjMxNSwtMC4wMjEyODcxODIzMjMwMjE5MgoyOCwwLjE5NzQzMzQ4MDkxMjk5Mzg3LDEuMDIyMTYxNjg4NTMwMTU0MywwLjI5MTY2NzY4MjMwMjM4MTIsMC40NTAxNDU1NzYwNjE3MTE5NgoyOSwwLjkxMjU4MzU5NzE0OTg0MjMsLTAuOTUxMDI0MzI2MjEzNDUwMiwwLjQ2Njk3NTQ4NDk2MzcwOTQ0LDAuNTY4NzY5NTY3OTY3MzgxMwozMCwtMy4yOTc2OTQyMTYwMjg5ODE3LC0wLjEzNDMxMzcwMTA0NzYwODM3LDAuMzc1NDYxOTgyMTY0MjUzODYsLTAuODEyODc2MTUyNTE4NjczNwozMSwwLjk1ODQ0Nzc1MzcwMzIyOCwtMC44MzI0Nzc5MzQxNTE1OTM4LC0xLjAyOTQyNzY5MTYxMDIzOSwtMC4xNDE0OTQ4MDEzOTU0MTU4NAozMiwwLjM5NDIyNjc1MzgzNDU3NjgsLTAuMDcxNjU3ODUyOTQzNjg2MiwtMC4zNTU2MjA2Nzc1MDIyNTYyMywtMS41NDkzNzMwODY3NzIyODcKMzMsLTAuMzQwNzM5NTExODM2MDA5OCwtMC4zMzE3Nzc2MDM3MzQ3NTk4LDEuOTY2MDMxMzYxNzk2ODE1NSwwLjY2MjgwODM1NTc2ODIyODQKMzQsMC4zNDMxMDQ2MDAxMzc0MTI1LDAuMTQyMjE2OTQ3ODQ0Mzc3OSwtMC41ODMyODM1NDgwNDYwMTEzLC0wLjM5ODQ3MDg5NTQxMTUzOTcKMzUsMC44OTY3NDk4MzQ2NTAwODIyLC0yLjQwNzYwNzMyOTEzOTg0LDEuODA3NDgzODk3Njc2MTc5NiwtMC4wMjI3MDk4MjE1OTUxMjA5NgozNiwtMC41ODYwMDIyNTM5NTQyMDYyLC0xLjA1NjM4Njk4NjY0MTc0OSwtMC4yNzI5MTE0MjU5OTUzOTc4LC0wLjAwMTgyNDA1MTgxMzE2NTM1MTYKMzcsMC43OTc0NDA3NjcwMDE3OTE3LC0xLjIyNTMzNDUzNTI2MDQ0NjEsMC41MjU1NDQ3NDc2MDI2ODI1LDAuODQwODcyMjE0MTMwMDcxNgozOCwwLjE5MTg0MDQ0ODE5NTY4MDM2LC0wLjkyNzcwMzA3MTUxODk4NSwtMC41ODI0OTgwNDU3NjA2NjMyLC0wLjEyMTQ0MTYxODA0NDQ1MDYyCjM5LC0wLjQwMDcxODM5MTAwMDA1Mzk2LDEuMTIyOTY1NjI2NDY1NzE2NCwwLjI3NjczNTI3NzYxNzgwNjQsLTEuMDU1NzAxMTQ5MDY3Nzc0Mwo0MCwxLjc5ODAzMzk2NDIzMTc4MjksMC40MDYzMjIzODEyMjA3Mzk1NSwwLjc0ODM4NjExOTY0NzU0OTQsMS40MTk2NDk5MjgxODA4ODM5CjQxLDAuODIwMzQxNTUxNDcxMzg4NCwxLjE0MzU0ODc3OTU5NzE1NTUsLTEuNjM1MzAwNTUxNDExODM4OCwxLjMwNTk3NzE5MjM4MjIzNjMKNDIsLTEuNDQ0MDEyOTgwOTc4NDU2NSwwLjY3NjY1NDk1NjQ3NTQ0NTgsLTEuNzU5MjIxMTI5NzAwNjkwMSwwLjg0NDE3MjM5MTc2ODk4NjIKNDMsLTEuNTM3NDg2NDE4NjU3OCwtMC4wMDU0NTQ2NTU3NjQ1ODkwNDcsMC42NzI5MTk0ODk1MDg2NTk4LC0yLjkzMjAxMjI5NzI0NDA2OTYKNDQsLTAuOTgzNzU5MjI4NDQ4ODg0NCwwLjExNTA1NzAwODY0ODQ4MDU1LC0wLjAxNTQ3MTE0MTUzNzc1MDI2LDAuNTg2NTkyMzU1NzE0NTc5Mgo0NSwwLjQ3NzI5OTI5ODgxMDg4MzYsLTAuNTA0MzAxNDk3MDU4NTQ0NywxLjYwMTg0Njg5MDMzODEwMzgsLTAuNTI4OTgxMzQ5MzI1NzAwNgo0NiwxLjMxMjc2MzY4MzU1ODg1MTIsMC43MjkyMjE1MTE1MzU4ODU3LDAuMzc4Mjc5NDEwMDg5MjY5NCwtMC4zODA2MTYzNjY3NTI2MTI1CjQ3LDIuMTUwODc3OTE3NTUyNjg1LDAuMTQ3MzA0NjE3NzM4NjU5MzMsLTAuMzEwMjIyNTMwOTE3OTE1NjMsLTEuNDgwODY2NDgwODc3MjUwNwo0OCwxLjI2NjE3MTI2NTIyMzc0MDcsMC40MTcxNjk5NzI1NTMwNDU4LDAuMDY4OTk1NTI2MjIwOTk0NzIsMS44MDYzMTU0ODA3MjYzNjkzCjQ5LC0xLjI5NjgyNDAzNjM0NjY4MSwtMS42NDQyODMyODM1NjE0OTMxLC0wLjczODEzNDI5NDQ0MTc4OTYsMC42NTYzOTA0NDM3Mjg4NzUK" target="_blank">Descargar archivo CSV</a>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+ 
+
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {}, "version_major": 2, "version_minor": 0}
+</script>
+
+
+    </main>
+    
