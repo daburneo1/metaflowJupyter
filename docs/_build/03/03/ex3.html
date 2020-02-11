@@ -1,0 +1,395 @@
+---
+interact_link: content/03/03/ex3.ipynb
+kernel_name: python3
+kernel_path: content/03/03
+has_widgets: false
+title: |-
+  Ejemplo3
+pagenum: 8
+prev_page:
+  url: /03/02/ex2.html
+next_page:
+  url: 
+suffix: .ipynb
+search: el se de la en b y step del para las peliculas una al ejemplo genero lista los que final bjoin reproduccion metaflow taquilleras ejecucion utilizar variable por cual ser o un pasos selecciona resultado esto es similar apunta siguiente paso mejorada este utiliza cargar estadisticas generadas anterior mejorar generador listas sobre ms procede importar modulos desde bmetaflow parametros definen asignandolos global estos detalla nombre parametro descripcion bajo sintaxis help ademas valor defecto puede tipo int string dato especifico action cada esta antecedido decorador python bstart comienza client recuperar ultima ejecucin exitosa bmoviestatsflow metodo self next ejecutan paralelos travez ramas
+
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
+---
+
+    <main class="jupyter-page">
+    <div id="page-info"><div id="page-title">Ejemplo3</div>
+</div>
+    <div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Ejemplo-3">Ejemplo 3<a class="anchor-link" href="#Ejemplo-3"> </a></h1>
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Lista-de-reproduccion-mejorada">Lista de reproduccion mejorada<a class="anchor-link" href="#Lista-de-reproduccion-mejorada"> </a></h2><p>En este ejemplo se utiliza Metaflow para cargar las estadisticas generadas en el ejemplo anterior y mejorar el generador de listas de reproduccion sobre las peliculas más taquilleras</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Ejecucion">Ejecucion<a class="anchor-link" href="#Ejecucion"> </a></h3>
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">metaflow</span> <span class="kn">import</span> <span class="n">FlowSpec</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">Parameter</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Se procede a importar los modulos a utilizar desde <b>Metaflow</b></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">PlayListFlow</span><span class="p">(</span><span class="n">FlowSpec</span><span class="p">):</span> <span class="c1"># Herencia de FlowSpec</span>
+
+    <span class="n">genre</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;genre&#39;</span><span class="p">,</span>
+                      <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Filter movies for a particular genre.&quot;</span><span class="p">,</span>
+                      <span class="n">default</span><span class="o">=</span><span class="s1">&#39;Action&#39;</span><span class="p">)</span>
+
+    <span class="n">recommendations</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;recommendations&#39;</span><span class="p">,</span>
+                                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The number of movies recommended for &quot;</span>
+                                <span class="s2">&quot;the playlist.&quot;</span><span class="p">,</span>
+                                <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Los parametros se definen asignandolos a una variable global. En estos se detalla el nombre del parametro, una descripcion bajo la sintaxis <code>help="..."</code>, ademas del valor por defecto, el cual puede ser el tipo de variable(int, String) o un dato en especifico(action).</p>
+<p>Cada "step" esta antecedido por el decorador de Python <code>@</code></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="nd">@step</span>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="kn">from</span> <span class="nn">metaflow</span> <span class="kn">import</span> <span class="n">Flow</span><span class="p">,</span> <span class="n">get_metadata</span>
+
+        <span class="c1"># Print metadata provider</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using metadata provider: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">get_metadata</span><span class="p">())</span>
+
+        <span class="c1"># Load the analysis from the MovieStatsFlow.(Ejercicio 02 clase MovieStatsFlow)</span>
+        <span class="n">run</span> <span class="o">=</span> <span class="n">Flow</span><span class="p">(</span><span class="s1">&#39;MovieStatsFlow&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">latest_successful_run</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Using analysis from &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">run</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">genre_stats</span> <span class="o">=</span> <span class="n">run</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">genre_stats</span>
+
+        <span class="c1"># Compute our two recommendation types in parallel.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonus_movie</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">genre_movies</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>En step <b>start</b> se comienza utilizar el "Metaflow Client" para recuperar la ultima ejecución exitosa de <b>MovieStatsFlow</b></p>
+<p>En el metodo <code>self.next</code> se ejecutan pasos paralelos a travez de ramas.</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="nd">@step</span>
+    <span class="k">def</span> <span class="nf">bonus_movie</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       
+        <span class="kn">import</span> <span class="nn">pandas</span>
+
+        <span class="c1"># Concatenar todos los generos de peliculas para escoger una</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;dataframe&#39;</span><span class="p">]</span> \
+                            <span class="k">for</span> <span class="n">genre</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">genre_stats</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> \
+                            <span class="k">if</span> <span class="n">genre</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">genre</span><span class="o">.</span><span class="n">lower</span><span class="p">()])</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># Se utiliza el sample n=1 para que retorne solo una fila del df</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bonus</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;movie_title&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                      <span class="n">df</span><span class="p">[</span><span class="s1">&#39;genres&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">join</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>El step <b>bonus_movie</b> selecciona aleatoriamente una pelicula que sea de un genero diferente para añadirla al resultado final.</p>
+<p>Esto se realiza mediante la implementacion de la libreria pandas y la funcion sample, la cual es similar al random y permite retornar una o varias filas aleatorias del <b>df</b></p>
+<p>Luego de esto apunta al siguiente paso que es el step <b>join</b></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="nd">@step</span>
+    <span class="k">def</span> <span class="nf">genre_movies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">shuffle</span>
+
+        <span class="c1"># For the genre of interest, generate a potential playlist using only</span>
+        <span class="c1"># highest gross box office titles (i.e. those in the last quartile).</span>
+        <span class="n">genre</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">genre</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">genre</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">genre_stats</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">movies</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">genre_stats</span><span class="p">[</span><span class="n">genre</span><span class="p">][</span><span class="s1">&#39;dataframe&#39;</span><span class="p">]</span> <span class="c1"># se le asigna del genre_stats en la llave genre, dentro de genre la llave dataframne</span>
+            <span class="n">quartiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">genre_stats</span><span class="p">[</span><span class="n">genre</span><span class="p">][</span><span class="s1">&#39;quartiles&#39;</span><span class="p">]</span>
+            <span class="n">selector</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;gross&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">quartiles</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># -1 es la ultima posicion</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">movies</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">selector</span><span class="p">][</span><span class="s1">&#39;movie_title&#39;</span><span class="p">])</span> <span class="c1"># lista de los titulos de peliculas</span>
+
+        <span class="c1"># Shuffle the playlist.</span>
+        <span class="n">shuffle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">movies</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">join</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>El step <b>genre_movies</b> selecciona las peliculas mas taquilleras del data frame y que coincidan con el genero especificado.</p>
+<p>Al final se aleatorizan las peliculas de la lista y se apunta al step
+ <b>join</b></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="nd">@step</span>
+    <span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">playlist</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">genre_movies</span><span class="o">.</span><span class="n">movies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bonus</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">bonus_movie</span><span class="o">.</span><span class="n">bonus</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>En el step <b>join</b> se une la informacion obtenida en paralelo y se la reasigna a las variables correspondientes para ser invocadas en el paso final</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="nd">@step</span>
+    <span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Print out the playlist and bonus movie.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Print the playlist.</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Playlist for movies in genre &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">genre</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">pick</span><span class="p">,</span> <span class="n">movie</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">playlist</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pick </span><span class="si">%d</span><span class="s2">: &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">pick</span><span class="p">,</span> <span class="n">movie</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">pick</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recommendations</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bonus Pick: &#39;</span><span class="si">%s</span><span class="s2">&#39; from &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonus</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonus</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Imprimir la lista de peliculas segun el numero requerido y el genero proporcionado. En el presente ejemplo se requieren 5 peliculas del genero accion</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>if __name__ == '__main__'</code>:<br>
+    <code>PlayListFlow()</code></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Sentencia para empezar la ejecucion del programa</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Si-todos-los-pasos-se-ejecutaron-correctamente,-tendriamos-una-salida-similar-a-la-siguiente:">Si todos los pasos se ejecutaron correctamente, tendriamos una salida similar a la siguiente:<a class="anchor-link" href="#Si-todos-los-pasos-se-ejecutaron-correctamente,-tendriamos-una-salida-similar-a-la-siguiente:"> </a></h3>
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="resultado3.png"></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="https://drive.google.com/uc?id=1kn6k6k5eQB03ktS8WtZxU6rHRWFukOYL&amp;export=download&amp;authuser=0">Descargar archivo .py</a></p>
+
+</div>
+</div>
+</div>
+</div>
+
+ 
+
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {}, "version_major": 2, "version_minor": 0}
+</script>
+
+
+    </main>
+    
