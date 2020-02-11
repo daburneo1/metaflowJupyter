@@ -67,3 +67,9 @@
   - title: Ejemplo1
     url: 03/01/ex1
     not_numbered: true
+  - title: Ejemplo2
+    url: 03/02/ex2
+    not_numbered: true
+  - title: Ejemplo3
+    url: 03/03/ex3
+    not_numbered: true
