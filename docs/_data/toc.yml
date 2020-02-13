@@ -73,3 +73,15 @@
   - title: Ejemplo3
     url: 03/03/ex3
     not_numbered: true
+
+- tittle: Jugadores Mundial
+  url: /04/introexm
+  not_numbered: true
+  expand_sections: true
+  sections:
+  - title: Jugadores del Mundial 2014 filtrados por pais
+    url: 04/01/ex1
+    not_numbered: true
+  - title: Estadisticas
+    url: 04/02/ex2
+    not_numbered: true

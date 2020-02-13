@@ -1,0 +1,378 @@
+---
+interact_link: content/04/02/ex2.ipynb
+kernel_name: python3
+kernel_path: content/04/02
+has_widgets: false
+title: |-
+  Estadisticas
+pagenum: 11
+prev_page:
+  url: /04/01/ex1.html
+next_page:
+  url: 
+suffix: .ipynb
+search: de en se los el del la b jugadores y ejecucion un archivo csv para como step estadisticas ejemplo una manera datos pasos self que br siguiente programa este mediante pandas procede cada pais base goles marcados utilizar desde funcion directorio similar puede metaflow todos por informacion diccionario realiza metodo next ramas bforeach bcomputestatics las resultados paralelo al descargar drive google com uc id downloadauthuser cargara metadatos mundial fifa calcular algunas especificas importar modulos bmetaflow implementa os path join conveniente obtener ruta mas facil esto permite tutorial cualquier bparametros definir incluirlo entrada versiona lo hara accesible directamente traves objeto bstart
+
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
+---
+
+    <main class="jupyter-page">
+    <div id="page-info"><div id="page-title">Estadisticas</div>
+</div>
+    <div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Estadisticas">Estadisticas<a class="anchor-link" href="#Estadisticas"> </a></h2><p>En este ejemplo se cargara un archivo CSV de metadatos de los jugadores del mundial FIFA 2014 mediante Pandas y se procede a calcular algunas estadisticas especificas de jugadores de cada pais y en base a los goles marcados.</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Ejecucion">Ejecucion<a class="anchor-link" href="#Ejecucion"> </a></h3>
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">metaflow</span> <span class="kn">import</span> <span class="n">FlowSpec</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">IncludeFile</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Se procede a importar los modulos a utilizar desde <b>Metaflow</b></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">script_path</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+
+    <span class="n">current_folder</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;_dh&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_folder</span><span class="p">,</span><span class="s1">&#39;mundial.csv&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Se implementa la funcion <code>os.path.join</code>, conveniente para obtener la ruta del directorio de una manera mas facil. Esto permite utilizar el tutorial desde cualquier directorio</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">PlayersStatFlow</span><span class="p">(</span><span class="n">FlowSpec</span><span class="p">):</span>
+
+    <span class="n">player_data</span> <span class="o">=</span> <span class="n">IncludeFile</span><span class="p">(</span><span class="s2">&quot;player_file&quot;</span><span class="p">,</span>
+                               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;El archivo de los jugadores del mundial&quot;</span><span class="p">,</span>
+                               <span class="n">default</span><span class="o">=</span><span class="n">script_path</span><span class="p">(</span><span class="s2">&quot;mundial.csv&quot;</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>De manera similar a los <b>Parametros</b>, se puede definir un archivo de datos para incluirlo como entrada. Metaflow versiona el archivo y lo hara accesible a todos los pasos directamente a traves del objeto <code>self</code></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="nd">@step</span>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="kn">import</span> <span class="nn">pandas</span>
+        <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+
+        <span class="c1"># Cargar la data mediante pandas</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">player_data</span><span class="p">),</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;|&#39;</span><span class="p">)</span> <span class="c1"># StringIo permite leer cadenas como archivos</span>
+
+        <span class="c1"># La columna &#39;genres&#39; tiene una lista de generos para cada pelicula</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Country</span> <span class="o">=</span> <span class="p">{</span><span class="n">countries</span> <span class="k">for</span> <span class="n">Country</span> \
+                        <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;Country&#39;</span><span class="p">]</span> \
+                        <span class="k">for</span> <span class="n">countries</span> <span class="ow">in</span> <span class="n">Country</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">)}</span> <span class="c1"># Se crea un nuevo diccionario con los paises del csv evitando duplicados</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Country</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Country</span><span class="p">)</span> <span class="c1">#Convierte el diccionario en lista</span>
+
+        <span class="c1"># Se quiere calcular algunas estadiscitas para cada genero.</span>
+        <span class="c1"># El argumento &#39;foreach&#39; permite hacer los calculos en paralelo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compute_statistics</span><span class="p">,</span> <span class="n">foreach</span><span class="o">=</span><span class="s1">&#39;Country&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>En el step <b>start</b> se comienza por analizar el CSV y a este extraer la informacion necesaria y almacenarla en un diccionario de Python. La lectura del CSV se realiza mediante la herramienta Pandas</p>
+<p>En el metodo <code>self.next</code> se ejecutan pasos paralelos a travez de ramas. La palabra clave <b>foreach</b></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="nd">@step</span>
+    <span class="k">def</span> <span class="nf">compute_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">country</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing statics for </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">country</span><span class="p">)</span>
+
+        <span class="c1"># Seleccionar todos los jugadores que pertenezcan al pais especificado.</span>
+        <span class="c1"># Crear un marco de datos con estos jugadores, y solo con las columnas necesarias</span>
+        <span class="n">selector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;Country&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">country</span> <span class="ow">in</span> <span class="n">row</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="n">selector</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[[</span><span class="s1">&#39;Last Name&#39;</span><span class="p">,</span><span class="s1">&#39;First Name&#39;</span><span class="p">,</span><span class="s1">&#39;Country&#39;</span><span class="p">,</span><span class="s1">&#39;Goals&#39;</span><span class="p">]]</span>
+
+        <span class="c1"># Obtener estadisticas sobre el numero de goles marcados</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="o">.</span><span class="mi">25</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">.</span><span class="mi">75</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quartiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;Goals&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">points</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+        <span class="c1"># Unir a los resultados de otros paises</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">join</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>El step <b>compute_statics</b> se ejecuta de manera paralela en funcion de <b>foreach</b>. Obtiene los jugadores que sean del pais especificado.
+<br>
+Luego se obtienen las estadisticas de los goles marcados por cada jugador, que se encuentran en el dataframe</p>
+<p>En el metodo <code>self.next</code> se unen los resultados de los otros jugadores despues de que la ejecucion en paralelo del <b>compute_statics</b> termine</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="nd">@step</span>
+    <span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">country_stats</span> <span class="o">=</span> <span class="p">{</span><span class="n">inp</span><span class="o">.</span><span class="n">country</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> \
+                                <span class="p">{</span><span class="s1">&#39;quartiles&#39;</span><span class="p">:</span> <span class="n">inp</span><span class="o">.</span><span class="n">quartiles</span><span class="p">,</span>
+                                 <span class="s1">&#39;dataframe&#39;</span><span class="p">:</span> <span class="n">inp</span><span class="o">.</span><span class="n">dataframe</span><span class="p">}</span> \
+                                 <span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>El step <b>join</b> une los resultados de las ramas paralelas combinandolos en un diccionario. Estos datos seran utilizados en el siguiente ejemplo como informacion base para generar una lista mejorada de peliculas recomendadas.</p>
+<p>Al ultimo apunta al paso final del programa</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="nd">@step</span>
+    <span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        End the flow.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>En el step <b>end</b> en general no realiza ninguna accion, pues el presente codigo es previo a la ejecucion del siguiente ejemplo, dejando listos los datos a utilizarse</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>if __name__ == '__main__'</code>:<br>
+    <code>PlayersStatsFlow()</code></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Sentencia para empezar la ejecucion del programa</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Si-todos-los-pasos-se-ejecutaron-correctamente,-tendriamos-una-salida-similar-a-la-siguiente:">Si todos los pasos se ejecutaron correctamente, tendriamos una salida similar a la siguiente:<a class="anchor-link" href="#Si-todos-los-pasos-se-ejecutaron-correctamente,-tendriamos-una-salida-similar-a-la-siguiente:"> </a></h3>
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="jugadores2.png"></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>En la imagen anterior se puede visualizar la correcta ejecucion del programa, como tambien el uso de los cuatro nucleos del computador empleado, como evidencia del trabajo en paralelo de Metaflow</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="https://drive.google.com/uc?id=12cTxo-XHeipnLuryAzjtrYIuwzJaulbn&amp;export=download&amp;authuser=0">Descargar CSV</a>
+<br/>
+<a href="https://drive.google.com/uc?id=18J6PKEZRh8L7jrZDFcah-yC5YmjxnC-f&amp;export=download&amp;authuser=0">Descargar archivo .py</a></p>
+
+</div>
+</div>
+</div>
+</div>
+
+ 
+
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {}, "version_major": 2, "version_minor": 0}
+</script>
+
+
+    </main>
+    

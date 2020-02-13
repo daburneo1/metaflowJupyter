@@ -1,0 +1,453 @@
+---
+interact_link: content/04/01/ex1.ipynb
+kernel_name: python3
+kernel_path: content/04/01
+has_widgets: false
+title: |-
+  Jugadores del Mundial 2014 filtrados por pais
+pagenum: 10
+prev_page:
+  url: /04/introexm.html
+next_page:
+  url: /04/02/ex2.html
+suffix: .ipynb
+search: el de se en del los la para b jugadores un que step por pais y archivo csv una pasos al mundial todos informacion como metaflow datos ejecucion esto puede ser final bjoin este ejemplo codigo numero utilizar desde directorio manera permite cualquier similar self variable estos defecto esta python paralelos es paralelo selecciona luego siguiente paso lista br descargar drive google com uc id downloadauthuser filtrados cargara metadatos fifa cuales constan nombres fecha nacimiento goles marcados dicho etc basado encargara filtrar presentar determinado usuario escoja procede importar modulos bmetaflow implementa funcion os path join conveniente obtener ruta mas facil
+
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
+---
+
+    <main class="jupyter-page">
+    <div id="page-info"><div id="page-title">Jugadores del Mundial 2014 filtrados por pais</div>
+</div>
+    <div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Jugadores-del-Mundial-2014-filtrados-por-pais">Jugadores del Mundial 2014 filtrados por pais<a class="anchor-link" href="#Jugadores-del-Mundial-2014-filtrados-por-pais"> </a></h2><p>En este ejemplo se cargara un archivo CSV de metadatos de todos los jugadores del mundial FIFA 2014, los cuales constan de informacion como nombres, pais, fecha de nacimiento, goles marcados en dicho mundial, etc.</p>
+<p>El codigo basado en Metaflow se encargara de filtrar los datos del csv para presentar un numero determinado de jugadores del pais que el usuario escoja.</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Ejecucion">Ejecucion<a class="anchor-link" href="#Ejecucion"> </a></h3>
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">metaflow</span> <span class="kn">import</span> <span class="n">FlowSpec</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">IncludeFile</span><span class="p">,</span> <span class="n">Parameter</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Se procede a importar los modulos a utilizar desde <b>Metaflow</b></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">script_path</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+
+    <span class="n">current_folder</span> <span class="o">=</span> <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;_dh&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_folder</span><span class="p">,</span><span class="s1">&#39;mundial.csv&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Se implementa la funcion <code>os.path.join</code>, conveniente para obtener la ruta del directorio de una manera mas facil. Esto permite utilizar el tutorial desde cualquier directorio</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">PlayerListFlow</span><span class="p">(</span><span class="n">FlowSpec</span><span class="p">):</span>
+
+    <span class="n">player_data</span> <span class="o">=</span> <span class="n">IncludeFile</span><span class="p">(</span><span class="s2">&quot;player_file&quot;</span><span class="p">,</span>
+                               <span class="n">help</span><span class="o">=</span><span class="s2">&quot;El archivo de los jugadores del mundial&quot;</span><span class="p">,</span>
+                               <span class="n">default</span><span class="o">=</span><span class="n">script_path</span><span class="p">(</span><span class="s2">&quot;mundial.csv&quot;</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>De manera similar a los <b>Parametros</b>, se puede definir un archivo de datos para incluirlo como entrada. Metaflow versiona el archivo y lo hara accesible a todos los pasos directamente a traves del objeto <code>self</code></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="n">country</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;country&#39;</span><span class="p">,</span>
+                      <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Filtrar los jugadores segun el pais&quot;</span><span class="p">,</span>
+                      <span class="n">default</span><span class="o">=</span><span class="s1">&#39;Mexico&#39;</span><span class="p">)</span> <span class="c1"># Se toma por valor de defecto Mexico, aunque el usuario puede asignar el pais deseado desde consola</span>
+
+    <span class="n">recommendations</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s1">&#39;recommendations&#39;</span><span class="p">,</span>
+                                <span class="n">help</span><span class="o">=</span><span class="s2">&quot;El numero de jugadores a retornar&quot;</span><span class="p">,</span>
+                                <span class="n">default</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span> <span class="c1"># El valor por defecto es el retorno de 20 jugadores del pais seleccionado</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Los parametros se definen asignandolos a una variable global. En estos se detalla el nombre del parametro, una descripcion bajo la sintaxis <code>help="..."</code>, ademas del valor por defecto, el cual puede ser el tipo de variable(int, String) o un dato en especifico(action).</p>
+<p>Cada "step" esta antecedido por el decorador de Python <code>@</code></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="nd">@step</span>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Se genera una lista con todos los campos que dispone el csv</span>
+        <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Display Name&quot;</span><span class="p">,</span><span class="s2">&quot;Country&quot;</span><span class="p">,</span><span class="s2">&quot;Last Name&quot;</span><span class="p">,</span><span class="s2">&quot;First Name&quot;</span><span class="p">,</span><span class="s2">&quot;Shirt Name&quot;</span><span class="p">,</span><span class="s2">&quot;DOB&quot;</span><span class="p">,</span><span class="s2">&quot;POS&quot;</span><span class="p">,</span><span class="s2">&quot;Club&quot;</span><span class="p">,</span><span class="s2">&quot;Height&quot;</span><span class="p">,</span><span class="s2">&quot;Caps&quot;</span><span class="p">,</span><span class="s2">&quot;Goals&quot;</span><span class="p">]</span>
+        <span class="c1"># Se crea un data frame siendo un diccionario de listas</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">column</span><span class="p">,</span> <span class="nb">list</span><span class="p">())</span>\
+                          <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">)</span>
+        
+        <span class="c1"># Se obtiene la informacion del csv, separandolas por un salto de linea</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">player_data</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="c1"># Titulos de cada columna, separandose por el |</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">)</span>
+        
+        <span class="n">idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">column</span><span class="p">:</span> <span class="n">header</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">column</span><span class="p">)</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">}</span>
+        
+        <span class="c1"># Se empieza a llenar la informacion al data frame desde lines</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">fields</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">,</span><span class="mi">11</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">idx</span><span class="p">[</span><span class="n">column</span><span class="p">]])</span>
+                
+        <span class="c1"># Ejecutar en paralelo los steps bonus_player y country_players</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonus_player</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">country_players</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>En step <b>start</b> se comienza por analizar el CSV y a este extraer la informacion necesaria y almacenarla en un diccionario de Python.</p>
+<p>En el metodo <code>self.next</code> se ejecutan pasos paralelos a travez de ramas. El beneficio de esto es mejorar el rendimiento de ejecucion. Metaflow puede ejecutar su codigo en paralelo aprovechando los distintos nucleos que posee el procesador del computador. Se permite cualquier cantidad de pasos paralelos.</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="nd">@step</span>
+    <span class="k">def</span> <span class="nf">bonus_player</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">choice</span> <span class="c1"># Funcion del modulo aleatorio de python</span>
+        
+        <span class="c1"># Se crea un diccionario con los campos que requerimos y se carga la informacion verificando que no pertenezcan al pais asignado, ya que es un dato adicional</span>
+        <span class="n">players</span> <span class="o">=</span> <span class="p">[(</span><span class="n">LastName</span><span class="p">,</span> <span class="n">FirstName</span><span class="p">,</span> <span class="n">Country</span><span class="p">,</span> <span class="n">Goals</span><span class="p">)</span>\
+                    <span class="k">for</span> <span class="n">LastName</span><span class="p">,</span> <span class="n">FirstName</span><span class="p">,</span> <span class="n">Country</span><span class="p">,</span> <span class="n">Goals</span> \
+                    <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;Last Name&#39;</span><span class="p">],</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;First Name&#39;</span><span class="p">],</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;Country&#39;</span><span class="p">],</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;Goals&#39;</span><span class="p">])</span>\
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">country</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">Country</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bonus</span> <span class="o">=</span> <span class="n">choice</span><span class="p">(</span><span class="n">players</span><span class="p">)</span> <span class="c1"># Se selecciona aleatoriamente uno del diccionario</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">join</span><span class="p">)</span> <span class="c1"># Apunta al siguiente paso</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>El step <b>bonus_player</b> selecciona aleatoriamente un jugador que pertenezca a un pais distinto del especificado para luego añadirlo al resultado final.</p>
+<p>Luego de esto apunta al siguiente paso que es el step <b>join</b></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="nd">@step</span>
+    <span class="k">def</span> <span class="nf">country_players</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">shuffle</span> <span class="c1"># Funcion del modulo aleatorio de python</span>
+        
+        <span class="c1"># Se crea un diccionario con los campos que requerimos, luego se carga la informacion verificando que pertenezcan al pais asignado</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">players</span> <span class="o">=</span> <span class="p">[(</span><span class="n">LastName</span><span class="p">,</span> <span class="n">FirstName</span><span class="p">,</span> <span class="n">Country</span><span class="p">,</span> <span class="n">Goals</span><span class="p">)</span>\
+                    <span class="k">for</span> <span class="n">LastName</span><span class="p">,</span> <span class="n">FirstName</span><span class="p">,</span> <span class="n">Country</span><span class="p">,</span> <span class="n">Goals</span> \
+                    <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;Last Name&#39;</span><span class="p">],</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;First Name&#39;</span><span class="p">],</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;Country&#39;</span><span class="p">],</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;Goals&#39;</span><span class="p">])</span>\
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">country</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">Country</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span>
+
+        <span class="n">shuffle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">players</span><span class="p">)</span> <span class="c1"># Con la duncion shuffle se aleatoriza la lista que se va a retornar</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">join</span><span class="p">)</span> <span class="c1"># Se apunta al siguiente paso</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>El step <b>country_players</b> selecciona los jugadores del dataframe que coincidan con el pais asignado</p>
+<p>Al final aleatoriza los jugadores de la lista para que de esta forma se encuentren listo, al igual que bonus para ser llamadas por el step <b>join</b></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="nd">@step</span>
+    <span class="k">def</span> <span class="nf">join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+
+        <span class="c1"># Reasignar las listas de peliculas a sus respectivas variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">playlist</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">genre_movies</span><span class="o">.</span><span class="n">movies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bonus</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">bonus_movie</span><span class="o">.</span><span class="n">bonus</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">)</span><span class="c1">#Apunta al paso final</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>En el step <b>join</b> se une la informacion obtenida en paralelo y se la reasigna a las variables correspondientes para ser invocadas en el paso final</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span>    <span class="nd">@step</span>
+    <span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Playlist for movies in genre &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">genre</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">pick</span><span class="p">,</span> <span class="n">movie</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">playlist</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pick </span><span class="si">%d</span><span class="s2">: &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">pick</span><span class="p">,</span> <span class="n">movie</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">pick</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recommendations</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bonus Pick: &#39;</span><span class="si">%s</span><span class="s2">&#39; from &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bonus</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">bonus</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Imprimir la lista de peliculas segun el numero requerido y el genero proporcionado. En el presente ejemplo se presentan 20 jugadores pertenecientes a Mexico. Estos datos estan como por defecto</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>if __name__ == '__main__'</code>:<br>
+    <code>PlayListFlow()</code></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Sentencia para empezar la ejecucion del programa</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Si-todos-los-pasos-se-ejecutaron-correctamente,-tendriamos-una-salida-similar-a-la-siguiente:">Si todos los pasos se ejecutaron correctamente, tendriamos una salida similar a la siguiente:<a class="anchor-link" href="#Si-todos-los-pasos-se-ejecutaron-correctamente,-tendriamos-una-salida-similar-a-la-siguiente:"> </a></h3>
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="jugadores1.png"></p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="https://drive.google.com/uc?id=12cTxo-XHeipnLuryAzjtrYIuwzJaulbn&amp;export=download&amp;authuser=0">Descargar CSV</a>
+<br/></p>
+<p><a href="https://drive.google.com/uc?id=16Z8MBc-yBSPGSMOO9LtKSSj05Q040qb0&amp;export=download&amp;authuser=0">Descargar archivo .py</a></p>
+
+</div>
+</div>
+</div>
+</div>
+
+ 
+
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {}, "version_major": 2, "version_minor": 0}
+</script>
+
+
+    </main>
+    
